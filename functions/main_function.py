@@ -177,8 +177,8 @@ class MainFunctions(MainWindow):
                 cropped = gray[topx:bottomx + 1, topy:bottomy + 1]
 
                 # configuration for tesseract
-                config = ('-l eng --oem 1 --psm 3')
-                text = pytesseract.image_to_string(cropped,lang='eng')
+                config ='-c tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ --psm 8 --oem 3'
+                text = pytesseract.image_to_string(cropped, config=config, lang='eng')
                 self.exit_result.setText(text)
                 img = cv2.resize(img, (320, 150))
                 Qimg1 = QImage(img.data, 320, 150, QImage.Format_RGB888)
