@@ -1,1 +1,2 @@
-from design.main_ui import *
+
+from main import MainWindow, LoginWindow

@@ -1,11 +1,11 @@
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel
 
 
-class CustomLogoutDialog(QDialog):
+class CustomUpdateToolsDialog(QDialog):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("logout!")
+        self.setWindowTitle("Updating")
         button = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
 
         self.buttonBox = QDialogButtonBox(button)
@@ -13,7 +13,7 @@ class CustomLogoutDialog(QDialog):
         self.buttonBox.rejected.connect(self.reject)
 
         self.layout = QVBoxLayout()
-        message = QLabel("Are you sure to Logging out of system?")
+        message = QLabel("This function is in Updating process.\nCompleted in the Future!")
         self.layout.addWidget(message)
         self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
