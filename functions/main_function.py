@@ -39,7 +39,8 @@ class MainFunctions(MainWindow):
         self.mail_window.show()
 
     def setup_camera(self):
-        if self.btn_connect_cam.isChecked():
+        if not self.camera_connection:
+            self.camera_connection = True
             if not self.timer.isActive():
                 try:
                     self.entrance_cam = cv2.VideoCapture(1, cv2.CAP_DSHOW)
@@ -51,11 +52,16 @@ class MainFunctions(MainWindow):
                     self.timer.start(150)
                     self.run_cam.setText("Reset")
                 except:
-                    QMessageBox.information(None, "Error", "Camera not connected", QMessageBox.Cancel)
-        return None
+                    self.camera_connection = False
+                    error_message = 'Failed to connect to Camera.\n' \
+                                    'Please try again.'
+                    dialog = CustomMessageInformation(error_message)
+                    if dialog.exec_():
+                        self.btn_connect_cam.setChecked(False)
 
     def disconnect_camera(self):
-        if self.btn_disconnect_cam.isChecked():
+        if self.camera_connection:
+            self.camera_connection = False
             if self.timer.isActive():
                 try:
                     self.timer.stop()
@@ -64,21 +70,26 @@ class MainFunctions(MainWindow):
                     cv2.destroyAllWindows()
                     self.run_cam.setText("Clear")
                 except:
-                    QMessageBox.information(None, "Error", "Camera has been closed", QMessageBox.Cancel)
-        return None
+                    self.camera_connection = False
+                    error_message = 'Failed to disconnect to Camera.\n' \
+                                    'Please try again.'
+                    dialog = CustomMessageInformation(error_message)
+                    if dialog.exec_():
+                        self.btn_disconnect_cam.setChecked(False)
 
     def reset_camera(self):
-        cv2.destroyAllWindows()
-        self.btn_connect_cam.setChecked(False)
-        self.btn_disconnect_cam.setChecked(False)
-        self.entrance_view.clear()
-        self.exit_view.clear()
-        self.entrance_capture_1.clear()
-        self.entrance_capture_2.clear()
-        self.exit_capture_1.clear()
-        self.exit_capture_2.clear()
-        self.entrance_result.clear()
-        self.exit_result.clear()
+        if self.camera_connection:
+            cv2.destroyAllWindows()
+            self.btn_connect_cam.setChecked(False)
+            self.btn_disconnect_cam.setChecked(False)
+            self.entrance_view.clear()
+            self.exit_view.clear()
+            self.entrance_capture_1.clear()
+            self.entrance_capture_2.clear()
+            self.exit_capture_1.clear()
+            self.exit_capture_2.clear()
+            self.entrance_result.clear()
+            self.exit_result.clear()
 
     def capture_entrance(self):
         if self.ret0:
@@ -109,7 +120,7 @@ class MainFunctions(MainWindow):
                 if screenCnt is None:
                     detected = 0
                     self.detected_entrance = False
-                    self.entrance_result.setText("No License Detected")
+                    self.entrance_result.setText('Error Detected')
                 else:
                     self.detected_entrance = True
                     detected = 1
@@ -186,7 +197,7 @@ class MainFunctions(MainWindow):
                 cropped = gray[topx:bottomx + 1, topy:bottomy + 1]
 
                 # configuration for tesseract
-                config ='-c tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ --psm 8 --oem 3'
+                config = '-c tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ --psm 8 --oem 3'
                 text = pytesseract.image_to_string(cropped, config=config, lang='eng')
                 self.exit_result.setText(text)
                 img = cv2.resize(img, (320, 150))
@@ -199,40 +210,59 @@ class MainFunctions(MainWindow):
                 self.exit_result.setText('Error Detected')
 
     def entrance_thread_capture(self):
-        try:
-            worker = Worker(lambda: MainFunctions.capture_entrance(self))  # Any other args, kwargs are passed to the run function
+        if self.camera_connection:
+            worker = Worker(
+                lambda: MainFunctions.capture_entrance(self))  # Any other args, kwargs are passed to the run function
             self.entrance_thread.start(worker)
-        except:
-            error_message = f'Error license capture detected.'
+        else:
+            error_message = 'Connected to Camera First.\n' \
+                            'Please try again.'
             dialog = CustomMessageInformation(error_message)
             if dialog.exec_():
                 return
 
     def exit_thread_capture(self):
-        try:
-            worker = Worker(lambda: MainFunctions.capture_exit(self))  # Any other args, kwargs are passed to the run function
+        if self.camera_connection:
+            worker = Worker(
+                lambda: MainFunctions.capture_exit(self))  # Any other args, kwargs are passed to the run function
             self.exit_thread.start(worker)
-        except:
-            error_message = f'Error license capture detected.'
+        else:
+            error_message = 'Connected to Camera First.\n' \
+                            'Please try again.'
             dialog = CustomMessageInformation(error_message)
             if dialog.exec_():
                 return
 
     def start_camera(self):
-        self.ret0, self.img1 = self.entrance_cam.read()
-        self.ret1, self.img2 = self.exit_cam.read()
+        try:
+            self.ret0, self.img1 = self.entrance_cam.read()
+            self.ret1, self.img2 = self.exit_cam.read()
 
-        if self.btn_connect_cam.isChecked():
-            self.img1 = cv2.resize(self.img1, (500, 480), interpolation=cv2.INTER_AREA)
-            self.img2 = cv2.resize(self.img2, (500, 480), interpolation=cv2.INTER_AREA)
-            self.img1 = cv2.cvtColor(self.img1, cv2.COLOR_BGR2RGB)
-            self.img2 = cv2.cvtColor(self.img2, cv2.COLOR_BGR2RGB)
-            qimg1 = QImage(self.img1.data, 500, 480, QImage.Format_RGB888)
-            qimg2 = QImage(self.img2.data, 500, 480, QImage.Format_RGB888)
-            self.entrance_view.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-            self.exit_view.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-            self.entrance_view.setPixmap(QPixmap.fromImage(qimg1))
-            self.exit_view.setPixmap(QPixmap.fromImage(qimg2))
+            if self.btn_connect_cam.isChecked():
+                self.img1 = cv2.resize(self.img1, (500, 480), interpolation=cv2.INTER_AREA)
+                self.img2 = cv2.resize(self.img2, (500, 480), interpolation=cv2.INTER_AREA)
+                self.img1 = cv2.cvtColor(self.img1, cv2.COLOR_BGR2RGB)
+                self.img2 = cv2.cvtColor(self.img2, cv2.COLOR_BGR2RGB)
+                qimg1 = QImage(self.img1.data, 500, 480, QImage.Format_RGB888)
+                qimg2 = QImage(self.img2.data, 500, 480, QImage.Format_RGB888)
+                self.entrance_view.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+                self.exit_view.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+                self.entrance_view.setPixmap(QPixmap.fromImage(qimg1))
+                self.exit_view.setPixmap(QPixmap.fromImage(qimg2))
+        except:
+            self.camera_connection = False
+
+    def check_entrance_result(self):
+        if (self.entrance_result.text() is not None or
+                self.entrance_result.text() != 'Error Detected'):
+            self.accept_entrance.setChecked(True)
+        self.accept_entrance.setChecked(False)
+
+    def check_exit_result(self):
+        if (self.exit_result.text() is not None or
+                self.exit_result.text() != 'Error Detected'):
+            self.accept_exit.setChecked(True)
+        self.accept_entrance.setChecked(False)
 
     def current_time(self):
         # get the current local time in hh:mm:ss format
@@ -249,6 +279,5 @@ class MainFunctions(MainWindow):
         self.setGraphicsEffect(self.shadow)
         self.lcdNumber.setDigitCount(8)
         style_str = 'QWidget {border-color: transparent; ' \
-                             'color: #000000;}'
+                    'color: #000000;}'
         self.lcdNumber.setStyleSheet(style_str)
-

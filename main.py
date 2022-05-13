@@ -29,6 +29,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.exit_thread = QThreadPool()
         self.detected_entrance = False
         self.detected_exit = False
+        self.camera_connection = False
+        self.accept_exit.setDisabled(True)
+        self.accept_entrance.setDisabled(True)
 
         self.ser = serial.Serial()
         self.connected = False
@@ -76,6 +79,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.resersed_opt.clicked.connect(lambda: functions.SlotFunctions.show_reserved_list(self))
         self.unavailable_opt.clicked.connect(lambda: functions.SlotFunctions.show_unavailable_list(self))
 
+        self.entrance_result.textChanged.connect(lambda: functions.MainFunctions.check_entrance_result(self))
+        self.exit_result.textChanged.connect(lambda: functions.MainFunctions.check_exit_result(self))
+        self.accept_entrance.clicked.connect(lambda: functions.DatabaseFunctions.Ask_for_permission_get_in(self))
+        self.accept_exit.clicked.connect(lambda: functions.DatabaseFunctions.Ask_for_permission_get_out(self))
 
 class LoginWindow(QMainWindow, Ui_LoginWindow):
     def __init__(self):

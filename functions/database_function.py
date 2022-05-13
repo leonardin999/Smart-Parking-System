@@ -258,15 +258,17 @@ class DatabaseFunctions(MainWindow):
                 DatabaseFunctions.get_payment_update(self)
 
     def Ask_for_permission_get_in(self, plate):
-        dialog = CustomAcceptedInformation(plate)
-        if dialog.exec_():
-            DatabaseFunctions.update_entry_information(self)
-        else:
-            pass
+        if self.accept_entrance.isChecked():
+            dialog = CustomAcceptedInformation(plate)
+            if dialog.exec_():
+                DatabaseFunctions.update_entry_information(self)
+            else:
+                pass
 
     def Ask_for_permission_get_out(self, plate):
-        dialog = CustomAcceptedInformation(plate)
-        if dialog.exec_():
-            DatabaseFunctions.update_exit_information(self)
-        else:
-            pass
+        if self.accept_exit.isChecked():
+            dialog = CustomAcceptedInformation(plate)
+            if dialog.exec_():
+                DatabaseFunctions.update_exit_information(self)
+            else:
+                pass
