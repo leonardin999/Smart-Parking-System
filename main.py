@@ -1,6 +1,6 @@
-from PySide6.QtWidgets import QApplication, QMainWindow, QGraphicsDropShadowEffect
+from PySide6.QtWidgets import QApplication, QMainWindow
 from PySide6.QtCore import Qt, QCoreApplication, QThreadPool, QTimer
-from PySide6.QtGui import QIcon, QPixmap, QScreen, QColor
+from PySide6.QtGui import QScreen
 
 import serial
 import sys
@@ -8,9 +8,7 @@ from qdarktheme import load_stylesheet, get_themes
 from design import *
 import functions
 
-
 # create the application and the main window
-
 
 def toggle_theme(theme) -> None:
     stylesheet = load_stylesheet(theme)
@@ -29,7 +27,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.style_box.currentTextChanged.connect(toggle_theme)
         self.entrance_thread = QThreadPool()
         self.exit_thread = QThreadPool()
-
         self.detected_entrance = False
         self.detected_exit = False
 
@@ -47,6 +44,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.db = None
         self.cursor = None
         self.db_connection = False
+
         functions.DatabaseFunctions.initial_connection(self)
         functions.MainFunctions.ui_definitions(self)
         functions.DatabaseFunctions.show_table_data(self)
@@ -55,6 +53,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.btn_login.clicked.connect(lambda: functions.MainFunctions.LogOut(self))
         self.btn_website.clicked.connect(lambda: functions.MainFunctions.goToWebsite(self))
+        self.btn_send_email.clicked.connect(lambda: functions.MainFunctions.open_message_tool(self))
         self.run_cam.clicked.connect(lambda: functions.MainFunctions.reset_camera(self))
 
         self.btn_connect_cam.clicked.connect(lambda: functions.MainFunctions.setup_camera(self))
@@ -77,6 +76,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.resersed_opt.clicked.connect(lambda: functions.SlotFunctions.show_reserved_list(self))
         self.unavailable_opt.clicked.connect(lambda: functions.SlotFunctions.show_unavailable_list(self))
 
+
 class LoginWindow(QMainWindow, Ui_LoginWindow):
     def __init__(self):
         super(LoginWindow, self).__init__()
@@ -90,17 +90,40 @@ class LoginWindow(QMainWindow, Ui_LoginWindow):
         self.Log_In.clicked.connect(lambda: functions.LoginFunctions.checkFields(self))
 
 
+class MessageWindow(QMainWindow, Ui_ConnectWindow):
+    def __init__(self):
+        super(MessageWindow, self).__init__()
+        self.setupUi(self)
+        self.setWindowTitle('Information Search Engine')
+        self.license_search.setPlaceholderText('insert license number...')
+        self.slot_edit.setReadOnly(True)
+
+        self.db = None
+        self.cursor = None
+        self.db_connection = False
+        self.founded = False
+        functions.MessageFunctions.initial_connection(self)
+
+        self.btn_search.clicked.connect(lambda: functions.MessageFunctions.search_information(self))
+        self.btn_clear.clicked.connect(lambda: functions.MessageFunctions.reset_tools(self))
+        self.btn_save.clicked.connect(lambda: functions.MessageFunctions.save_information(self))
+        self.btn_send_sms.clicked.connect(lambda: functions.MessageFunctions.send_SMS(self))
+        self.btn_email.clicked.connect(lambda: functions.MessageFunctions.send_Email(self))
+
+
 if __name__ == '__main__':
     # setting screen to the center
-    QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
     app = QApplication(sys.argv)
+    QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
     centerPoint = QScreen.availableGeometry(app.primaryScreen()).center()
-    window = LoginWindow()
-    fg = window.frameGeometry()
+
+    login_window = LoginWindow()
+    fg = login_window.frameGeometry()
     fg.moveCenter(centerPoint)
-    window.move(fg.topLeft())
+    login_window.move(fg.topLeft())
+
     # setup stylesheet
     app.setStyleSheet(load_stylesheet(theme="light"))
     # run
-    window.show()
+    login_window.show()
     app.exec()

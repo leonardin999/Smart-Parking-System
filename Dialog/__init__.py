@@ -5,3 +5,4 @@ from .CustomUpdateToolsDialog import CustomUpdateToolsDialog
 from .CustomExitNotify import CustomExitNotify
 from .CustomEntryNotify import CustomEntryNotify
 from .CustomAcceptedInformation import CustomAcceptedInformation
+from. CustomMessageInformation import CustomMessageInformation

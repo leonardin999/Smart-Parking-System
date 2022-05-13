@@ -1,2 +1,2 @@
 
-from main import MainWindow, LoginWindow
+from main import MainWindow, LoginWindow, MessageWindow

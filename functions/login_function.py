@@ -1,6 +1,6 @@
 from modules import *
 from PySide6.QtWidgets import QGraphicsDropShadowEffect
-from PySide6.QtGui import QColor
+from PySide6.QtGui import QColor, QScreen
 
 
 class LoginFunctions(LoginWindow):

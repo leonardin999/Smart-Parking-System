@@ -1,7 +1,7 @@
 import time
 
 from modules import *
-from Dialog.CustomLogoutDialog import CustomLogoutDialog
+from Dialog import CustomLogoutDialog, CustomMessageInformation
 from PySide6.QtWidgets import QGraphicsDropShadowEffect, QMessageBox
 from PySide6.QtGui import QColor, QImage, QPixmap
 from PySide6.QtCore import Qt
@@ -26,11 +26,17 @@ class MainFunctions(MainWindow):
             self.login.show()
         else:
             pass
+
     @staticmethod
     def goToWebsite(self):
         import webbrowser
         url = "http://localhost/parking/dashboard"
         webbrowser.open_new_tab(url)
+
+    def open_message_tool(self):
+        self.mail_window = MessageWindow()
+        self.mail_window.close()
+        self.mail_window.show()
 
     def setup_camera(self):
         if self.btn_connect_cam.isChecked():
@@ -63,6 +69,8 @@ class MainFunctions(MainWindow):
 
     def reset_camera(self):
         cv2.destroyAllWindows()
+        self.btn_connect_cam.setChecked(False)
+        self.btn_disconnect_cam.setChecked(False)
         self.entrance_view.clear()
         self.exit_view.clear()
         self.entrance_capture_1.clear()
@@ -76,6 +84,7 @@ class MainFunctions(MainWindow):
         if self.ret0:
             image_path = os.path.join(os.getcwd(), 'images/entrance.png')
             cv2.imwrite(image_path, self.img1)
+
         if os.path.isfile(image_path):
             img = cv2.imread(image_path, cv2.IMREAD_COLOR)
             img = cv2.resize(img, (320, 150))
@@ -190,12 +199,24 @@ class MainFunctions(MainWindow):
                 self.exit_result.setText('Error Detected')
 
     def entrance_thread_capture(self):
-        worker = Worker(lambda: MainFunctions.capture_entrance(self))  # Any other args, kwargs are passed to the run function
-        self.entrance_thread.start(worker)
+        try:
+            worker = Worker(lambda: MainFunctions.capture_entrance(self))  # Any other args, kwargs are passed to the run function
+            self.entrance_thread.start(worker)
+        except:
+            error_message = f'Error license capture detected.'
+            dialog = CustomMessageInformation(error_message)
+            if dialog.exec_():
+                return
 
     def exit_thread_capture(self):
-        worker = Worker(lambda: MainFunctions.capture_exit(self))  # Any other args, kwargs are passed to the run function
-        self.exit_thread.start(worker)
+        try:
+            worker = Worker(lambda: MainFunctions.capture_exit(self))  # Any other args, kwargs are passed to the run function
+            self.exit_thread.start(worker)
+        except:
+            error_message = f'Error license capture detected.'
+            dialog = CustomMessageInformation(error_message)
+            if dialog.exec_():
+                return
 
     def start_camera(self):
         self.ret0, self.img1 = self.entrance_cam.read()

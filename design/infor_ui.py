@@ -12,16 +12,13 @@ from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
 from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,QScreen,
+    QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGroupBox, QHBoxLayout, QLabel,
     QLineEdit, QMainWindow, QPushButton, QSizePolicy,
     QVBoxLayout, QWidget)
 
-from qdarktheme import load_stylesheet, get_themes
-
-import sys
 class Ui_ConnectWindow(object):
     def setupUi(self, ConnectWindow):
         if not ConnectWindow.objectName():
@@ -32,12 +29,15 @@ class Ui_ConnectWindow(object):
         self.groupBox = QGroupBox(self.centralwidget)
         self.groupBox.setObjectName(u"groupBox")
         self.groupBox.setGeometry(QRect(10, 10, 331, 91))
-        self.btn_search = QPushButton(self.groupBox)
-        self.btn_search.setObjectName(u"btn_search")
-        self.btn_search.setGeometry(QRect(200, 55, 121, 31))
+        self.btn_clear = QPushButton(self.groupBox)
+        self.btn_clear.setObjectName(u"btn_clear")
+        self.btn_clear.setGeometry(QRect(150, 55, 81, 31))
         self.license_search = QLineEdit(self.groupBox)
         self.license_search.setObjectName(u"license_search")
         self.license_search.setGeometry(QRect(10, 20, 311, 31))
+        self.btn_search = QPushButton(self.groupBox)
+        self.btn_search.setObjectName(u"btn_search")
+        self.btn_search.setGeometry(QRect(240, 55, 81, 31))
         self.layoutWidget4_2 = QWidget(self.centralwidget)
         self.layoutWidget4_2.setObjectName(u"layoutWidget4_2")
         self.layoutWidget4_2.setGeometry(QRect(20, 110, 91, 121))
@@ -64,9 +64,9 @@ class Ui_ConnectWindow(object):
 
         self.verticalLayout_6.addWidget(self.label_20)
 
-        self.pushButton_3 = QPushButton(self.centralwidget)
-        self.pushButton_3.setObjectName(u"pushButton_3")
-        self.pushButton_3.setGeometry(QRect(10, 240, 331, 41))
+        self.btn_email = QPushButton(self.centralwidget)
+        self.btn_email.setObjectName(u"btn_email")
+        self.btn_email.setGeometry(QRect(110, 240, 231, 41))
         self.layoutWidget = QWidget(self.centralwidget)
         self.layoutWidget.setObjectName(u"layoutWidget")
         self.layoutWidget.setGeometry(QRect(121, 110, 221, 121))
@@ -103,6 +103,9 @@ class Ui_ConnectWindow(object):
 
         self.verticalLayout.addWidget(self.slot_edit)
 
+        self.btn_save = QPushButton(self.centralwidget)
+        self.btn_save.setObjectName(u"btn_save")
+        self.btn_save.setGeometry(QRect(10, 240, 91, 41))
         ConnectWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(ConnectWindow)
@@ -113,28 +116,14 @@ class Ui_ConnectWindow(object):
     def retranslateUi(self, ConnectWindow):
         ConnectWindow.setWindowTitle(QCoreApplication.translate("ConnectWindow", u"MainWindow", None))
         self.groupBox.setTitle(QCoreApplication.translate("ConnectWindow", u"License Plate Search:", None))
+        self.btn_clear.setText(QCoreApplication.translate("ConnectWindow", u"Clear", None))
         self.btn_search.setText(QCoreApplication.translate("ConnectWindow", u"Search", None))
         self.label_16.setText(QCoreApplication.translate("ConnectWindow", u"Owner name:", None))
         self.label_17.setText(QCoreApplication.translate("ConnectWindow", u"Number:", None))
         self.label_19.setText(QCoreApplication.translate("ConnectWindow", u"Email:", None))
         self.label_20.setText(QCoreApplication.translate("ConnectWindow", u"Parking slot:", None))
-        self.pushButton_3.setText(QCoreApplication.translate("ConnectWindow", u"Send Email", None))
+        self.btn_email.setText(QCoreApplication.translate("ConnectWindow", u"Send Email", None))
         self.btn_send_sms.setText(QCoreApplication.translate("ConnectWindow", u"send SMS", None))
+        self.btn_save.setText(QCoreApplication.translate("ConnectWindow", u"Save", None))
     # retranslateUi
 
-if __name__ == '__main__':
-    # setting screen to the center
-    QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
-    app = QApplication(sys.argv)
-    centerPoint = QScreen.availableGeometry(app.primaryScreen()).center()
-    ui = QMainWindow()
-    window = Ui_ConnectWindow()
-    window.setupUi(ui)
-    fg = ui.frameGeometry()
-    fg.moveCenter(centerPoint)
-    ui.move(fg.topLeft())
-    # setup stylesheet
-    app.setStyleSheet(load_stylesheet(theme="light"))
-    # run
-    ui.show()
-    app.exec()

@@ -5,9 +5,9 @@ import pymysql
 from Dialog import CustomDbConnectionDialog
 from PySide6.QtWidgets import QTableWidgetItem
 from Dialog import CustomUpdateToolsDialog, \
-                    CustomEntryNotify, \
-                    CustomExitNotify,\
-                    CustomAcceptedInformation
+    CustomEntryNotify, \
+    CustomExitNotify, \
+    CustomAcceptedInformation
 import webbrowser
 from functions import SystemFunctions
 
@@ -30,9 +30,15 @@ class DatabaseFunctions(MainWindow):
                 self.db_connection = False
 
     def show_table_data(self):
+        while self.tableWidget.rowCount() > 0:
+            self.tableWidget.clear()
+            self.tableWidget.removeRow(0)
+
+        self.tableWidget.setColumnCount(5)
+        self.tableWidget.setHorizontalHeaderLabels(("License Number", "Username", "Phone", "Slot", "Check-in"))
+        col = 0
+        row = 0
         if self.db_connection:
-            col = 0
-            row = 0
             self.cursor = self.db.cursor(pymysql.cursors.DictCursor)
             query = "SELECT db.license_number,db.username" \
                     ",db.phone,s.slot_name,db.in_time " \
@@ -42,7 +48,10 @@ class DatabaseFunctions(MainWindow):
 
             self.cursor.execute(query)
             all_data = self.cursor.fetchall()
+            self.db.commit()
+            self.cursor.close()
             for data in all_data:
+                self.tableWidget.insertRow(row)
                 for key, item in data.items():
                     if key == 'in_time':
                         format_item = item.split('T')
@@ -54,9 +63,7 @@ class DatabaseFunctions(MainWindow):
                     col += 1
                 row += 1
                 col = 0
-            row = 0
             # closing the cursor
-            self.cursor.close()
 
     def counted_function(self):
         reserved_slot = 0
@@ -106,6 +113,7 @@ class DatabaseFunctions(MainWindow):
                 return True
             return False
         return False
+
 
     def change_entry_status(self, plate=None):
         entry_status = False
@@ -165,6 +173,7 @@ class DatabaseFunctions(MainWindow):
                 self.cursor.execute(insert_query)
                 self.db.commit()
                 self.cursor.close()
+                DatabaseFunctions.refresh_page(self)
 
     @staticmethod
     def update_parking_page(self):
