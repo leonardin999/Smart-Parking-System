@@ -374,12 +374,7 @@ class Ui_MainWindow(object):
         self.capture_entrance.setGeometry(QRect(10, 280, 131, 31))
         self.entrance_result = QLineEdit(self.groupBox_7)
         self.entrance_result.setObjectName(u"entrance_result")
-        self.entrance_result.setGeometry(QRect(150, 280, 151, 31))
-        self.accept_entrance = QRadioButton(self.groupBox_7)
-        self.accept_entrance.setObjectName(u"accept_entrance")
-        self.accept_entrance.setGeometry(QRect(310, 290, 16, 16))
-        self.accept_entrance.setStyleSheet(u"selection-color: rgb(0, 170, 0);\n"
-"color: rgb(0, 255, 0);")
+        self.entrance_result.setGeometry(QRect(150, 280, 181, 31))
         self.groupBox_8 = QGroupBox(self.centralwidget)
         self.groupBox_8.setObjectName(u"groupBox_8")
         self.groupBox_8.setGeometry(QRect(1045, 350, 341, 321))
@@ -397,12 +392,7 @@ class Ui_MainWindow(object):
         self.capture_exit.setGeometry(QRect(10, 280, 141, 31))
         self.exit_result = QLineEdit(self.groupBox_8)
         self.exit_result.setObjectName(u"exit_result")
-        self.exit_result.setGeometry(QRect(160, 280, 141, 31))
-        self.accept_exit = QRadioButton(self.groupBox_8)
-        self.accept_exit.setObjectName(u"accept_exit")
-        self.accept_exit.setGeometry(QRect(310, 290, 16, 16))
-        self.accept_exit.setStyleSheet(u"selection-color: rgb(0, 170, 0);\n"
-"color: rgb(0, 255, 0);")
+        self.exit_result.setGeometry(QRect(160, 280, 171, 31))
         self.groupBox_10 = QGroupBox(self.centralwidget)
         self.groupBox_10.setObjectName(u"groupBox_10")
         self.groupBox_10.setGeometry(QRect(10, 550, 401, 61))
@@ -593,7 +583,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -694,12 +684,10 @@ class Ui_MainWindow(object):
         self.entrance_capture_1.setText("")
         self.entrance_capture_2.setText("")
         self.capture_entrance.setText(QCoreApplication.translate("MainWindow", u"Capture Camera", None))
-        self.accept_entrance.setText("")
         self.groupBox_8.setTitle(QCoreApplication.translate("MainWindow", u"Exit  Capture", None))
         self.exit_capture_1.setText("")
         self.exit_capture_2.setText("")
         self.capture_exit.setText(QCoreApplication.translate("MainWindow", u"Capture Camera", None))
-        self.accept_exit.setText("")
         self.groupBox_10.setTitle(QCoreApplication.translate("MainWindow", u"Devices Setup:", None))
         self.label_21.setText(QCoreApplication.translate("MainWindow", u"Camera:", None))
         self.btn_connect_cam.setText(QCoreApplication.translate("MainWindow", u"Connected", None))

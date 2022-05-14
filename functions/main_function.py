@@ -5,13 +5,13 @@ from Dialog import CustomLogoutDialog, CustomMessageInformation
 from PySide6.QtWidgets import QGraphicsDropShadowEffect, QMessageBox
 from PySide6.QtGui import QColor, QImage, QPixmap
 from PySide6.QtCore import Qt
-
+import functions
 import cv2
 import os
 import imutils
 import numpy as np
 import pytesseract
-
+from pytesseract import Output
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
 from .worker import Worker
 
@@ -39,31 +39,30 @@ class MainFunctions(MainWindow):
         self.mail_window.show()
 
     def setup_camera(self):
-        if not self.camera_connection:
-            self.camera_connection = True
-            if not self.timer.isActive():
-                try:
-                    self.entrance_cam = cv2.VideoCapture(1, cv2.CAP_DSHOW)
-                    self.entrance_cam.set(3, 1280)
-                    self.entrance_cam.set(4, 720)
-                    self.exit_cam = cv2.VideoCapture(2, cv2.CAP_DSHOW)
-                    self.exit_cam.set(3, 1280)
-                    self.exit_cam.set(4, 720)
-                    self.timer.start(150)
-                    self.run_cam.setText("Reset")
-                except:
-                    self.camera_connection = False
-                    error_message = 'Failed to connect to Camera.\n' \
-                                    'Please try again.'
-                    dialog = CustomMessageInformation(error_message)
-                    if dialog.exec_():
-                        self.btn_connect_cam.setChecked(False)
+        if not self.timer.isActive():
+            try:
+                self.camera_connection = True
+                self.entrance_cam = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+                self.entrance_cam.set(3, 1280)
+                self.entrance_cam.set(4, 720)
+                self.exit_cam = cv2.VideoCapture(2, cv2.CAP_DSHOW)
+                self.exit_cam.set(3, 1280)
+                self.exit_cam.set(4, 720)
+                self.timer.start(150)
+                self.run_cam.setText("Reset")
+            except:
+                self.camera_connection = False
+                error_message = 'Failed to connect to Camera.\n' \
+                                'Please try again.'
+                dialog = CustomMessageInformation(error_message)
+                if dialog.exec_():
+                    self.btn_connect_cam.setChecked(False)
 
     def disconnect_camera(self):
         if self.camera_connection:
-            self.camera_connection = False
             if self.timer.isActive():
                 try:
+                    self.camera_connection = False
                     self.timer.stop()
                     self.entrance_cam.release()
                     self.exit_cam.release()
@@ -95,6 +94,7 @@ class MainFunctions(MainWindow):
         if self.ret0:
             image_path = os.path.join(os.getcwd(), 'images/entrance.png')
             cv2.imwrite(image_path, self.img1)
+            time.sleep(0.1)
 
         if os.path.isfile(image_path):
             img = cv2.imread(image_path, cv2.IMREAD_COLOR)
@@ -121,6 +121,9 @@ class MainFunctions(MainWindow):
                     detected = 0
                     self.detected_entrance = False
                     self.entrance_result.setText('Error Detected')
+                    self.entrance_capture_1.clear()
+                    self.entrance_capture_2.clear()
+
                 else:
                     self.detected_entrance = True
                     detected = 1
@@ -136,10 +139,9 @@ class MainFunctions(MainWindow):
                 (topx, topy) = (np.min(x), np.min(y))
                 (bottomx, bottomy) = (np.max(x), np.max(y))
                 cropped = gray[topx:bottomx + 1, topy:bottomy + 1]
-
                 # configuration for tesseract
-                config = ('-l eng --oem 1 --psm 3')
-                text = pytesseract.image_to_string(cropped, config=config)
+                config = '--psm 13 --oem 1 -c tessedit_char_whitelist=ABCDEFG0123456789-'
+                text = pytesseract.image_to_string(cropped, lang='eng', config=config)
                 self.entrance_result.setText(text)
                 img = cv2.resize(img, (320, 150))
                 Qimg1 = QImage(img.data, 320, 150, QImage.Format_RGB888)
@@ -147,13 +149,17 @@ class MainFunctions(MainWindow):
                 self.entrance_capture_1.setPixmap(QPixmap.fromImage(Qimg1))
                 self.entrance_capture_2.setPixmap(QPixmap.fromImage(Qimg2))
                 return None
-            except:
+            except Exception as e:
                 self.entrance_result.setText('Error Detected')
+                self.entrance_capture_1.clear()
+                self.entrance_capture_2.clear()
+                print(e)
 
     def capture_exit(self):
         if self.ret1:
             image_path = os.path.join(os.getcwd(), 'images/exit.png')
             cv2.imwrite(image_path, self.img2)
+            time.sleep(0.1)
 
         if os.path.isfile(image_path):
             img = cv2.imread(image_path, cv2.IMREAD_COLOR)
@@ -179,7 +185,9 @@ class MainFunctions(MainWindow):
                 if screenCnt is None:
                     detected = 0
                     self.detected_exit = False
-                    self.exit_result.setText("Error Detected")
+                    self.exit_result.setText('Error Detected')
+                    self.exit_capture_1.clear()
+                    self.exit_capture_2.clear()
                 else:
                     self.detected_entrance = True
                     detected = 1
@@ -195,10 +203,9 @@ class MainFunctions(MainWindow):
                 (topx, topy) = (np.min(x), np.min(y))
                 (bottomx, bottomy) = (np.max(x), np.max(y))
                 cropped = gray[topx:bottomx + 1, topy:bottomy + 1]
-
                 # configuration for tesseract
-                config = '-c tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ --psm 8 --oem 3'
-                text = pytesseract.image_to_string(cropped, config=config, lang='eng')
+                config = '--psm 13 --oem 1 -c tessedit_char_whitelist=ABCDEFG0123456789-'
+                text = pytesseract.image_to_string(cropped, lang='eng', config=config)
                 self.exit_result.setText(text)
                 img = cv2.resize(img, (320, 150))
                 Qimg1 = QImage(img.data, 320, 150, QImage.Format_RGB888)
@@ -208,6 +215,8 @@ class MainFunctions(MainWindow):
                 return None
             except:
                 self.exit_result.setText('Error Detected')
+                self.exit_capture_1.clear()
+                self.exit_capture_2.clear()
 
     def entrance_thread_capture(self):
         if self.camera_connection:
@@ -235,34 +244,33 @@ class MainFunctions(MainWindow):
 
     def start_camera(self):
         try:
-            self.ret0, self.img1 = self.entrance_cam.read()
-            self.ret1, self.img2 = self.exit_cam.read()
-
-            if self.btn_connect_cam.isChecked():
-                self.img1 = cv2.resize(self.img1, (500, 480), interpolation=cv2.INTER_AREA)
-                self.img2 = cv2.resize(self.img2, (500, 480), interpolation=cv2.INTER_AREA)
-                self.img1 = cv2.cvtColor(self.img1, cv2.COLOR_BGR2RGB)
-                self.img2 = cv2.cvtColor(self.img2, cv2.COLOR_BGR2RGB)
-                qimg1 = QImage(self.img1.data, 500, 480, QImage.Format_RGB888)
-                qimg2 = QImage(self.img2.data, 500, 480, QImage.Format_RGB888)
-                self.entrance_view.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-                self.exit_view.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-                self.entrance_view.setPixmap(QPixmap.fromImage(qimg1))
-                self.exit_view.setPixmap(QPixmap.fromImage(qimg2))
-        except:
+            if self.camera_connection:
+                self.ret0, self.img1 = self.entrance_cam.read()
+                self.ret1, self.img2 = self.exit_cam.read()
+                if self.btn_connect_cam.isChecked():
+                    self.img1 = cv2.resize(self.img1, (500, 480), interpolation=cv2.INTER_AREA)
+                    self.img2 = cv2.resize(self.img2, (500, 480), interpolation=cv2.INTER_AREA)
+                    self.img1 = cv2.cvtColor(self.img1, cv2.COLOR_BGR2RGB)
+                    self.img2 = cv2.cvtColor(self.img2, cv2.COLOR_BGR2RGB)
+                    qimg1 = QImage(self.img1.data, 500, 480, QImage.Format_RGB888)
+                    qimg2 = QImage(self.img2.data, 500, 480, QImage.Format_RGB888)
+                    self.entrance_view.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+                    self.exit_view.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+                    self.entrance_view.setPixmap(QPixmap.fromImage(qimg1))
+                    self.exit_view.setPixmap(QPixmap.fromImage(qimg2))
+        except :
+            self.timer.stop()
             self.camera_connection = False
 
     def check_entrance_result(self):
-        if (self.entrance_result.text() is not None or
+        if (self.entrance_result.text() is not None and
                 self.entrance_result.text() != 'Error Detected'):
-            self.accept_entrance.setChecked(True)
-        self.accept_entrance.setChecked(False)
+            functions.DatabaseFunctions.Ask_for_permission_get_in(self, self.entrance_result.text().strip())
 
     def check_exit_result(self):
-        if (self.exit_result.text() is not None or
+        if (self.exit_result.text() is not None and
                 self.exit_result.text() != 'Error Detected'):
-            self.accept_exit.setChecked(True)
-        self.accept_entrance.setChecked(False)
+            functions.DatabaseFunctions.Ask_for_permission_get_out(self, self.exit_result.text().strip())
 
     def current_time(self):
         # get the current local time in hh:mm:ss format

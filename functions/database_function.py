@@ -2,7 +2,7 @@ import time
 
 from modules import *
 import pymysql
-from Dialog import CustomDbConnectionDialog
+from Dialog import CustomDbConnectionDialog, CustomMessageInformation
 from PySide6.QtWidgets import QTableWidgetItem
 from Dialog import CustomUpdateToolsDialog, \
     CustomEntryNotify, \
@@ -109,11 +109,10 @@ class DatabaseFunctions(MainWindow):
                 if data['deleted'] == 0 and data['entry_status'] is None:
                     reserved_list.append(data['license_number'].strip())
             self.cursor.close()
-            if plate.trip() in reserved_list:
+            if plate.strip('\n').strip() in reserved_list:
                 return True
             return False
         return False
-
 
     def change_entry_status(self, plate=None):
         entry_status = False
@@ -145,18 +144,33 @@ class DatabaseFunctions(MainWindow):
                 # data = ("0","72A-9999")
                 self.cursor.execute(selected_query)
                 all_data = self.cursor.fetchall()
-                for data in all_data:
-                    if data['entry_status'] == 0:
-                        update_query = f"UPDATE vehicle_details SET entry_status= %s where license_number= %s"
-                        data = ("1", plate)
-                        self.cursor.execute(update_query, data)
-                    else:
-                        self.cursor.close()
-                        exit_status = False
-                        return None
-                self.db.commit()
-                self.cursor.close()
-                exit_status = True
+                if all_data:
+                    for data in all_data:
+                        if data['entry_status'] == 0:
+                            update_query = f"UPDATE vehicle_details SET entry_status= %s where license_number= %s"
+                            data = ("1", plate)
+                            self.cursor.execute(update_query, data)
+                            self.db.commit()
+                            self.cursor.close()
+                            exit_status = True
+                            DatabaseFunctions.get_payment_update(self)
+                            return
+                        else:
+                            error_message = f'Cannot find vehicle with plate: {plate}.\n' \
+                                            f'Permission Denied.'
+                            dialog = CustomMessageInformation(error_message)
+                            if dialog.exec_():
+                                self.cursor.close()
+                                exit_status = False
+                                return None
+                else:
+                    error_message = f'Cannot find vehicle with plate: {plate}.\n' \
+                                    f'Permission Denied.'
+                    dialog = CustomMessageInformation(error_message)
+                    if dialog.exec_():
+                        pass
+
+
 
         if exit_status:
             CustomExitNotify()
@@ -169,11 +183,10 @@ class DatabaseFunctions(MainWindow):
             if plate is not None and slot_id is not None:
                 self.cursor = self.db.cursor(pymysql.cursors.DictCursor)
                 insert_query = f"INSERT INTO software_db(username,phone,license_number,type, slot, in_time) " \
-                               f"VALUES ('unknown','+00-00-000-0000',{plate}','unknown',{slot_id},{current_time});"
+                               f"VALUES ('unknown','+00-00-000-0000','{plate}','unknown',{slot_id},'{current_time}');"
                 self.cursor.execute(insert_query)
                 self.db.commit()
                 self.cursor.close()
-                DatabaseFunctions.refresh_page(self)
 
     @staticmethod
     def update_parking_page(self):
@@ -181,7 +194,7 @@ class DatabaseFunctions(MainWindow):
         webbrowser.open_new_tab(url)
 
     @staticmethod
-    def get_payment_update(self, plate):
+    def get_payment_update(self):
 
         url = f"http://localhost/parking/parking"
         webbrowser.open_new_tab(url)
@@ -255,20 +268,17 @@ class DatabaseFunctions(MainWindow):
         if self.db_connection:
             if plate:
                 DatabaseFunctions.change_exit_status(self, plate)
-                DatabaseFunctions.get_payment_update(self)
 
     def Ask_for_permission_get_in(self, plate):
-        if self.accept_entrance.isChecked():
-            dialog = CustomAcceptedInformation(plate)
-            if dialog.exec_():
-                DatabaseFunctions.update_entry_information(self)
-            else:
-                pass
+        dialog = CustomAcceptedInformation(plate)
+        if dialog.exec_():
+            DatabaseFunctions.update_entry_information(self, plate)
+        else:
+            pass
 
     def Ask_for_permission_get_out(self, plate):
-        if self.accept_exit.isChecked():
-            dialog = CustomAcceptedInformation(plate)
-            if dialog.exec_():
-                DatabaseFunctions.update_exit_information(self)
-            else:
-                pass
+        dialog = CustomAcceptedInformation(plate)
+        if dialog.exec_():
+            DatabaseFunctions.update_exit_information(self, plate)
+        else:
+            pass
