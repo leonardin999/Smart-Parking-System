@@ -83,5 +83,5 @@ class SystemFunctions(MainWindow):
         """
         if self.ser.isOpen():
             print(messages)
-            self.ser.write(messages.encode())
+            self.ser.write(chr(255))
             self.ser.flushInput()
