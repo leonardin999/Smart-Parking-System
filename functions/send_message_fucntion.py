@@ -106,15 +106,27 @@ class MessageFunctions(MessageWindow):
             if dialog.exec_():
                 pass
 
+    def update_vehicle_detail(self):
+
+        if self.db_connection:
+            self.cursor = self.db.cursor(pymysql.cursors.DictCursor)
+            sql_update = f"UPDATE vehicle_detail SET type=%s WHERE license_number= %s"
+            data = (self.name_edit_2.text(),
+                    self.license_search.text())
+            self.cursor.execute(sql_update, data)
+            self.db.commit()
+            self.cursor.close()
+
     def save_information(self):
         if (MessageFunctions.check_field_empty(self) and
                 MessageFunctions.check_valid_number(self)):
             MessageFunctions.update_table(self)
+            MessageFunctions.update_vehicle_detail(self)
         return
 
     def check_valid_mail(self):
         import re
-        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        regex = r'(\W|^)[\w.+\-]*@gmail\.com(\W|$)'
         email = self.email_edit.text().strip()
         if email:
             if re.fullmatch(regex, email):

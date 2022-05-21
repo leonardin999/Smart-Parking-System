@@ -2,13 +2,17 @@ import time
 
 from modules import *
 import pymysql
+from datetime import datetime
+import os
 from Dialog import CustomDbConnectionDialog, CustomMessageInformation
-from PySide6.QtWidgets import QTableWidgetItem
+from PySide6.QtWidgets import QTableWidgetItem, QFileDialog
+from PySide6.QtCore import Qt
 from Dialog import CustomUpdateToolsDialog, \
     CustomEntryNotify, \
     CustomExitNotify, \
     CustomAcceptedInformation
 import webbrowser
+import pandas as pd
 from functions import SystemFunctions
 
 
@@ -63,7 +67,6 @@ class DatabaseFunctions(MainWindow):
                     col += 1
                 row += 1
                 col = 0
-            # closing the cursor
 
     def counted_function(self):
         reserved_slot = 0
@@ -170,8 +173,6 @@ class DatabaseFunctions(MainWindow):
                     if dialog.exec_():
                         pass
 
-
-
         if exit_status:
             CustomExitNotify()
 
@@ -244,8 +245,8 @@ class DatabaseFunctions(MainWindow):
                 if available_slot:
                     import random
                     slot_id = random.choice(available_slot)
-                    insert_query = f"INSERT INTO Vehicle_Details(license_number,deleted) " \
-                                   f"VALUES ('{plate}',0);"
+                    insert_query = f"INSERT INTO Vehicle_Details(type,license_number,deleted) " \
+                                   f"VALUES ('regular car','{plate}',0);"
                     self.cursor.execute(insert_query)
                     update_query = f"UPDATE slots SET active= %s where id= %s"
                     data = ("2", str(slot_id))
@@ -282,3 +283,74 @@ class DatabaseFunctions(MainWindow):
             DatabaseFunctions.update_exit_information(self, plate)
         else:
             pass
+
+    def export_to_Excel(self):
+        excel_folder = ''
+        excel_folder = QFileDialog.getExistingDirectory(self, "Choose Directory",
+                                                        r"E:\Python Project\Parking Software Project\app\excel files")
+        if os.path.isdir(excel_folder):
+            excel_path = excel_folder + "/data_{}.xlsx".format(datetime.now().strftime("%Y%m%d"))
+            columnHeaders = []
+            # create column header list
+            for j in range(self.tableWidget.model().columnCount()):
+                columnHeaders.append(self.tableWidget.horizontalHeaderItem(j).text())
+
+            df = pd.DataFrame(columns=columnHeaders)
+
+            # create dataframe object recordset
+            for row in range(self.tableWidget.rowCount()):
+                for col in range(self.tableWidget.columnCount()):
+                    df.at[row, columnHeaders[col]] = self.tableWidget.item(row, col).text()
+
+            df.to_excel(excel_path, index=False)
+            confirm_message = f'File saved in:\n' \
+                              f'{excel_path}.'
+            dialog = CustomMessageInformation(confirm_message)
+            if dialog.exec_():
+                return
+        else:
+            error_message = f'Invalid file path.\n' \
+                            f'Please try again.'
+            dialog = CustomMessageInformation(error_message)
+            if dialog.exec_():
+                return
+
+    def filter_datatable(self):
+
+        matching_items = []
+        if self.date_choose.isChecked():
+            items = self.tableWidget.findItems(self.dateEdit.date().toString('yyyy-MM-dd'), Qt.MatchContains)
+            matching_items.extend(items)
+        elif self.slot_choose.isChecked():
+            items = self.tableWidget.findItems(self.comboBox.currentText(), Qt.MatchContains)
+            matching_items.extend(items)
+        else:
+            error_message = f'Please choose Filter mode.'
+            dialog = CustomMessageInformation(error_message)
+            if dialog.exec_():
+                return
+        if matching_items:
+            items = []
+            messages = ''
+            for i in matching_items:
+                row = self.tableWidget.row(i)
+                messages = 'plate: ' + self.tableWidget.item(row, 0).text() + ' -- ' \
+                           + 'phone: ' + self.tableWidget.item(row, 2).text()
+                items.append(messages)
+                messages = ''
+
+            confirm_message = f'Data founded:\n ' + '\n'.join(items)
+            dialog = CustomMessageInformation(confirm_message)
+            if dialog.exec_():
+                return
+        else:
+            error_message = f'No filter information found.\n' \
+                            f'Please try again.'
+            dialog = CustomMessageInformation(error_message)
+            if dialog.exec_():
+                return
+
+    def reset_data(self):
+        self.date_choose.setChecked(False)
+        self.slot_choose.setChecked(False)
+        self.comboBox.setCurrentIndex(0)

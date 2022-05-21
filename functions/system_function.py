@@ -1,8 +1,8 @@
-from serial.tools.list_ports_windows import comports
+import time
+
 from modules import *
 import serial.tools.list_ports
-from Dialog import CustomSystemConnectionDialog
-
+from Dialog import CustomSystemConnectionDialog, CustomMessageInformation
 
 class SystemFunctions(MainWindow):
 
@@ -10,18 +10,11 @@ class SystemFunctions(MainWindow):
         """
         List all comm port available in devices manager
         """
-        ports = serial.tools.list_ports.comports()
-        self.comPort = [
-            comport.device for comport in serial.tools.list_ports.comports()
-        ]
-        count = len(self.comPort)
-        if count == 0:
-            pass
-        elif count == 1:
-            self.port.addItem(str(self.comPort[0]))
-        else:
-            self.port.addItem(str(self.commPort[0]))
-            self.port.addItem(str(self.commPort[1]))
+        ports = list(serial.tools.list_ports.comports())
+        for p in ports:
+            if 'Arduino' in p.description:
+                self.comPort.append(p.device)
+        self.port.addItems(self.comPort)
 
     def connectInitial(self, port, baud):
         self.ser.port = port
@@ -37,7 +30,6 @@ class SystemFunctions(MainWindow):
         self.ser.open()
 
     def system_connected(self):
-
         try:
             port = self.port.currentText()
             baud = self.baud.currentText()
@@ -45,6 +37,7 @@ class SystemFunctions(MainWindow):
             self.connected = True
             if self.ser.isOpen():
                 self.btn_connect.setText("disconnect")
+            return
         except:
             dialog = CustomSystemConnectionDialog()
             if dialog.exec_():
@@ -82,6 +75,13 @@ class SystemFunctions(MainWindow):
         Encoding messages to send to Serial connected devices
         """
         if self.ser.isOpen():
-            print(messages)
-            self.ser.write(chr(255))
-            self.ser.flushInput()
+            if messages:
+                self.ser.write(chr(int(messages)).encode())
+                self.ser.flushInput()
+                time.sleep(0.3)
+            else:
+                error_message = f'Invalid Command.\n' \
+                                f'Please try again.'
+                dialog = CustomMessageInformation(error_message)
+                if dialog.exec_():
+                    return

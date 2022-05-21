@@ -20,23 +20,23 @@ void setup() {
 
 void loop() {
   // Wait for serial input (min 3 bytes in buffer)
-  if (Serial.available() > 3) {
+  if (Serial.available() > 0) {
     // Read the first byte
     slot = Serial.read();
-    Serial.println(slot);
-    if (slot < 12) {
+    if (slot < 13) {
       digitalWrite(LED_BUILTIN, HIGH);
-        digitalWrite(slot, HIGH);
-        String message = String("Guild to Slot: "+String(slot)+"."); 
-        Serial.println(message);
-        Serial.print("");
-
+      digitalWrite(slot, HIGH);
+      String message = String("Activate guild to slot "+String(slot)); 
+      Serial.println(message);
     }//startbyte ok
     else{
       digitalWrite(slot, LOW);
-      String message = String("Guildline completed."); 
+      for( int i=0; i<13; i++){
+          digitalWrite(i, LOW);
+        }
+      String message = String("Process Completed"); 
       Serial.println(message);
-      Serial.print("");
+      digitalWrite(LED_BUILTIN, LOW);
     }
   }//serial avail
 }//loop

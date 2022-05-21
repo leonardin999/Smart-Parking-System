@@ -8,6 +8,7 @@ from qdarktheme import load_stylesheet, get_themes
 from design import *
 import functions
 
+
 # create the application and the main window
 
 def toggle_theme(theme) -> None:
@@ -35,6 +36,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.connected = False
         self.command = ''
         self.slot_information = ''
+        self.comPort = []
+        functions.SystemFunctions.generated_port(self)
         self.timer = QTimer()
         self.timer.timeout.connect(lambda: functions.MainFunctions.start_camera(self))
 
@@ -64,10 +67,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.capture_exit.clicked.connect(lambda: functions.MainFunctions.exit_thread_capture(self))
 
         self.btn_connect.clicked.connect(lambda: functions.SystemFunctions.option_check(self))
+        self.btn_test.clicked.connect(
+            lambda: functions.SystemFunctions.send_information(self, self.command_write.text()))
+        self.btn_test.clicked.connect(lambda: functions.SystemFunctions.read_information(self))
 
-        self.btn_find.clicked.connect(lambda: functions.DatabaseFunctions.unfinished_function(self))
-        self.btn_export.clicked.connect(lambda: functions.DatabaseFunctions.unfinished_function(self))
+        self.btn_find.clicked.connect(lambda: functions.DatabaseFunctions.filter_datatable(self))
+        self.btn_export.clicked.connect(lambda: functions.DatabaseFunctions.export_to_Excel(self))
 
+        self.btn_reset.clicked.connect(lambda: functions.DatabaseFunctions.reset_data(self))
         self.btn_reset.clicked.connect(lambda: functions.DatabaseFunctions.show_table_data(self))
         self.btn_reset.clicked.connect(lambda: functions.DatabaseFunctions.counted_function(self))
 
@@ -79,6 +86,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.entrance_result.textChanged.connect(lambda: functions.MainFunctions.check_entrance_result(self))
         self.exit_result.textChanged.connect(lambda: functions.MainFunctions.check_exit_result(self))
+
 
 class LoginWindow(QMainWindow, Ui_LoginWindow):
     def __init__(self):

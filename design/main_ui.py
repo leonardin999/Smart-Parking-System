@@ -134,35 +134,71 @@ class Ui_MainWindow(object):
         self.btn_find = QPushButton(self.groupBox_6)
         self.btn_find.setObjectName(u"btn_find")
         self.btn_find.setGeometry(QRect(160, 90, 141, 41))
-        self.layoutWidget = QWidget(self.groupBox_6)
-        self.layoutWidget.setObjectName(u"layoutWidget")
-        self.layoutWidget.setGeometry(QRect(10, 30, 291, 51))
-        self.formLayout_2 = QFormLayout(self.layoutWidget)
-        self.formLayout_2.setObjectName(u"formLayout_2")
-        self.formLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.label_9 = QLabel(self.layoutWidget)
-        self.label_9.setObjectName(u"label_9")
-
-        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.label_9)
-
-        self.dateEdit = QDateEdit(self.layoutWidget)
-        self.dateEdit.setObjectName(u"dateEdit")
-
-        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.dateEdit)
-
-        self.label_11 = QLabel(self.layoutWidget)
-        self.label_11.setObjectName(u"label_11")
-
-        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.label_11)
-
-        self.dateEdit_2 = QDateEdit(self.layoutWidget)
-        self.dateEdit_2.setObjectName(u"dateEdit_2")
-
-        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.dateEdit_2)
-
         self.btn_reset = QPushButton(self.groupBox_6)
         self.btn_reset.setObjectName(u"btn_reset")
         self.btn_reset.setGeometry(QRect(10, 90, 141, 41))
+        self.widget = QWidget(self.groupBox_6)
+        self.widget.setObjectName(u"widget")
+        self.widget.setGeometry(QRect(11, 20, 41, 61))
+        self.verticalLayout_6 = QVBoxLayout(self.widget)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.label_9 = QLabel(self.widget)
+        self.label_9.setObjectName(u"label_9")
+
+        self.verticalLayout_6.addWidget(self.label_9)
+
+        self.label_11 = QLabel(self.widget)
+        self.label_11.setObjectName(u"label_11")
+
+        self.verticalLayout_6.addWidget(self.label_11)
+
+        self.widget1 = QWidget(self.groupBox_6)
+        self.widget1.setObjectName(u"widget1")
+        self.widget1.setGeometry(QRect(60, 20, 211, 61))
+        self.verticalLayout_7 = QVBoxLayout(self.widget1)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.dateEdit = QDateEdit(self.widget1)
+        self.dateEdit.setObjectName(u"dateEdit")
+        self.dateEdit.setDate(QDate(2022, 3, 31))
+
+        self.verticalLayout_7.addWidget(self.dateEdit)
+
+        self.comboBox = QComboBox(self.widget1)
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.setObjectName(u"comboBox")
+
+        self.verticalLayout_7.addWidget(self.comboBox)
+
+        self.widget2 = QWidget(self.groupBox_6)
+        self.widget2.setObjectName(u"widget2")
+        self.widget2.setGeometry(QRect(280, 20, 21, 61))
+        self.verticalLayout_9 = QVBoxLayout(self.widget2)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.verticalLayout_9.setContentsMargins(0, 0, 0, 0)
+        self.date_choose = QRadioButton(self.widget2)
+        self.date_choose.setObjectName(u"date_choose")
+
+        self.verticalLayout_9.addWidget(self.date_choose)
+
+        self.slot_choose = QRadioButton(self.widget2)
+        self.slot_choose.setObjectName(u"slot_choose")
+
+        self.verticalLayout_9.addWidget(self.slot_choose)
+
         self.btn_export = QPushButton(self.tab_2)
         self.btn_export.setObjectName(u"btn_export")
         self.btn_export.setGeometry(QRect(710, 450, 311, 41))
@@ -395,32 +431,32 @@ class Ui_MainWindow(object):
         self.exit_result.setGeometry(QRect(160, 280, 171, 31))
         self.groupBox_10 = QGroupBox(self.centralwidget)
         self.groupBox_10.setObjectName(u"groupBox_10")
-        self.groupBox_10.setGeometry(QRect(10, 550, 401, 61))
+        self.groupBox_10.setGeometry(QRect(10, 550, 371, 61))
         self.groupBox_10.setFont(font)
-        self.layoutWidget6 = QWidget(self.groupBox_10)
-        self.layoutWidget6.setObjectName(u"layoutWidget6")
-        self.layoutWidget6.setGeometry(QRect(10, 23, 381, 31))
-        self.horizontalLayout_2 = QHBoxLayout(self.layoutWidget6)
+        self.layoutWidget = QWidget(self.groupBox_10)
+        self.layoutWidget.setObjectName(u"layoutWidget")
+        self.layoutWidget.setGeometry(QRect(10, 23, 351, 31))
+        self.horizontalLayout_2 = QHBoxLayout(self.layoutWidget)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.label_21 = QLabel(self.layoutWidget6)
+        self.label_21 = QLabel(self.layoutWidget)
         self.label_21.setObjectName(u"label_21")
 
         self.horizontalLayout_2.addWidget(self.label_21)
 
-        self.btn_connect_cam = QRadioButton(self.layoutWidget6)
+        self.btn_connect_cam = QRadioButton(self.layoutWidget)
         self.btn_connect_cam.setObjectName(u"btn_connect_cam")
         self.btn_connect_cam.setStyleSheet(u"color: rgb(0, 85, 0);")
 
         self.horizontalLayout_2.addWidget(self.btn_connect_cam)
 
-        self.btn_disconnect_cam = QRadioButton(self.layoutWidget6)
+        self.btn_disconnect_cam = QRadioButton(self.layoutWidget)
         self.btn_disconnect_cam.setObjectName(u"btn_disconnect_cam")
         self.btn_disconnect_cam.setStyleSheet(u"color: rgb(170, 0, 0);")
 
         self.horizontalLayout_2.addWidget(self.btn_disconnect_cam)
 
-        self.run_cam = QPushButton(self.layoutWidget6)
+        self.run_cam = QPushButton(self.layoutWidget)
         self.run_cam.setObjectName(u"run_cam")
 
         self.horizontalLayout_2.addWidget(self.run_cam)
@@ -437,52 +473,52 @@ class Ui_MainWindow(object):
         self.label_18.setStyleSheet(u"font: 8pt \"MS Shell Dlg 2\";")
         self.groupBox_12 = QGroupBox(self.centralwidget)
         self.groupBox_12.setObjectName(u"groupBox_12")
-        self.groupBox_12.setGeometry(QRect(570, 540, 301, 141))
+        self.groupBox_12.setGeometry(QRect(540, 540, 301, 141))
         self.groupBox_12.setFont(font)
-        self.layoutWidget7 = QWidget(self.groupBox_12)
-        self.layoutWidget7.setObjectName(u"layoutWidget7")
-        self.layoutWidget7.setGeometry(QRect(10, 30, 281, 111))
-        self.formLayout = QFormLayout(self.layoutWidget7)
+        self.layoutWidget6 = QWidget(self.groupBox_12)
+        self.layoutWidget6.setObjectName(u"layoutWidget6")
+        self.layoutWidget6.setGeometry(QRect(10, 30, 281, 111))
+        self.formLayout = QFormLayout(self.layoutWidget6)
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setContentsMargins(0, 0, 0, 0)
-        self.label_17 = QLabel(self.layoutWidget7)
+        self.label_17 = QLabel(self.layoutWidget6)
         self.label_17.setObjectName(u"label_17")
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label_17)
 
-        self.lcdNumber = QLCDNumber(self.layoutWidget7)
+        self.lcdNumber = QLCDNumber(self.layoutWidget6)
         self.lcdNumber.setObjectName(u"lcdNumber")
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.lcdNumber)
 
-        self.label_16 = QLabel(self.layoutWidget7)
+        self.label_16 = QLabel(self.layoutWidget6)
         self.label_16.setObjectName(u"label_16")
 
         self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_16)
 
-        self.slot_display = QLineEdit(self.layoutWidget7)
+        self.slot_display = QLineEdit(self.layoutWidget6)
         self.slot_display.setObjectName(u"slot_display")
         self.slot_display.setReadOnly(True)
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.slot_display)
 
-        self.label_19 = QLabel(self.layoutWidget7)
+        self.label_19 = QLabel(self.layoutWidget6)
         self.label_19.setObjectName(u"label_19")
 
         self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_19)
 
-        self.available_slot_display = QLineEdit(self.layoutWidget7)
+        self.available_slot_display = QLineEdit(self.layoutWidget6)
         self.available_slot_display.setObjectName(u"available_slot_display")
         self.available_slot_display.setReadOnly(True)
 
         self.formLayout.setWidget(2, QFormLayout.FieldRole, self.available_slot_display)
 
-        self.label_20 = QLabel(self.layoutWidget7)
+        self.label_20 = QLabel(self.layoutWidget6)
         self.label_20.setObjectName(u"label_20")
 
         self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_20)
 
-        self.car_display = QLineEdit(self.layoutWidget7)
+        self.car_display = QLineEdit(self.layoutWidget6)
         self.car_display.setObjectName(u"car_display")
         self.car_display.setReadOnly(True)
 
@@ -490,20 +526,20 @@ class Ui_MainWindow(object):
 
         self.groupBox_11 = QGroupBox(self.centralwidget)
         self.groupBox_11.setObjectName(u"groupBox_11")
-        self.groupBox_11.setGeometry(QRect(10, 620, 401, 61))
-        self.layoutWidget8 = QWidget(self.groupBox_11)
-        self.layoutWidget8.setObjectName(u"layoutWidget8")
-        self.layoutWidget8.setGeometry(QRect(10, 20, 381, 31))
-        self.horizontalLayout = QHBoxLayout(self.layoutWidget8)
+        self.groupBox_11.setGeometry(QRect(10, 620, 371, 61))
+        self.layoutWidget7 = QWidget(self.groupBox_11)
+        self.layoutWidget7.setObjectName(u"layoutWidget7")
+        self.layoutWidget7.setGeometry(QRect(10, 20, 351, 31))
+        self.horizontalLayout = QHBoxLayout(self.layoutWidget7)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.port = QComboBox(self.layoutWidget8)
+        self.port = QComboBox(self.layoutWidget7)
         self.port.addItem("")
         self.port.setObjectName(u"port")
 
         self.horizontalLayout.addWidget(self.port)
 
-        self.baud = QComboBox(self.layoutWidget8)
+        self.baud = QComboBox(self.layoutWidget7)
         self.baud.addItem("")
         self.baud.addItem("")
         self.baud.addItem("")
@@ -536,32 +572,32 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.baud)
 
-        self.btn_connect = QPushButton(self.layoutWidget8)
+        self.btn_connect = QPushButton(self.layoutWidget7)
         self.btn_connect.setObjectName(u"btn_connect")
 
         self.horizontalLayout.addWidget(self.btn_connect)
 
         self.groupBox_9 = QGroupBox(self.centralwidget)
         self.groupBox_9.setObjectName(u"groupBox_9")
-        self.groupBox_9.setGeometry(QRect(420, 550, 141, 131))
-        self.layoutWidget9 = QWidget(self.groupBox_9)
-        self.layoutWidget9.setObjectName(u"layoutWidget9")
-        self.layoutWidget9.setGeometry(QRect(10, 20, 121, 101))
-        self.verticalLayout_8 = QVBoxLayout(self.layoutWidget9)
+        self.groupBox_9.setGeometry(QRect(390, 550, 141, 131))
+        self.layoutWidget8 = QWidget(self.groupBox_9)
+        self.layoutWidget8.setObjectName(u"layoutWidget8")
+        self.layoutWidget8.setGeometry(QRect(10, 20, 121, 101))
+        self.verticalLayout_8 = QVBoxLayout(self.layoutWidget8)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.verticalLayout_8.setContentsMargins(0, 0, 0, 0)
-        self.btn_send_email = QPushButton(self.layoutWidget9)
+        self.btn_send_email = QPushButton(self.layoutWidget8)
         self.btn_send_email.setObjectName(u"btn_send_email")
 
         self.verticalLayout_8.addWidget(self.btn_send_email)
 
-        self.btn_website = QPushButton(self.layoutWidget9)
+        self.btn_website = QPushButton(self.layoutWidget8)
         self.btn_website.setObjectName(u"btn_website")
         self.btn_website.setFont(font)
 
         self.verticalLayout_8.addWidget(self.btn_website)
 
-        self.btn_login = QPushButton(self.layoutWidget9)
+        self.btn_login = QPushButton(self.layoutWidget8)
         self.btn_login.setObjectName(u"btn_login")
         self.btn_login.setFont(font)
 
@@ -569,21 +605,27 @@ class Ui_MainWindow(object):
 
         self.groupBox_13 = QGroupBox(self.centralwidget)
         self.groupBox_13.setObjectName(u"groupBox_13")
-        self.groupBox_13.setGeometry(QRect(880, 540, 161, 61))
+        self.groupBox_13.setGeometry(QRect(850, 540, 191, 51))
         self.style_box = QComboBox(self.groupBox_13)
         self.style_box.setObjectName(u"style_box")
-        self.style_box.setGeometry(QRect(10, 20, 141, 31))
+        self.style_box.setGeometry(QRect(10, 20, 171, 21))
         self.groupBox_14 = QGroupBox(self.centralwidget)
         self.groupBox_14.setObjectName(u"groupBox_14")
-        self.groupBox_14.setGeometry(QRect(880, 610, 161, 61))
+        self.groupBox_14.setGeometry(QRect(850, 590, 191, 91))
         self.comand_edit = QLineEdit(self.groupBox_14)
         self.comand_edit.setObjectName(u"comand_edit")
-        self.comand_edit.setGeometry(QRect(10, 20, 141, 31))
+        self.comand_edit.setGeometry(QRect(10, 20, 171, 31))
+        self.command_write = QLineEdit(self.groupBox_14)
+        self.command_write.setObjectName(u"command_write")
+        self.command_write.setGeometry(QRect(10, 60, 101, 21))
+        self.btn_test = QPushButton(self.groupBox_14)
+        self.btn_test.setObjectName(u"btn_test")
+        self.btn_test.setGeometry(QRect(120, 60, 61, 21))
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -641,9 +683,25 @@ class Ui_MainWindow(object):
 
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Information Filter:", None))
         self.btn_find.setText(QCoreApplication.translate("MainWindow", u"Find", None))
-        self.label_9.setText(QCoreApplication.translate("MainWindow", u"From:", None))
-        self.label_11.setText(QCoreApplication.translate("MainWindow", u"To:", None))
         self.btn_reset.setText(QCoreApplication.translate("MainWindow", u"Reset", None))
+        self.label_9.setText(QCoreApplication.translate("MainWindow", u"Date:", None))
+        self.label_11.setText(QCoreApplication.translate("MainWindow", u"Slot:", None))
+        self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"choose slot", None))
+        self.comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"SA-00", None))
+        self.comboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"SA-01", None))
+        self.comboBox.setItemText(3, QCoreApplication.translate("MainWindow", u"SA-02", None))
+        self.comboBox.setItemText(4, QCoreApplication.translate("MainWindow", u"SA-03", None))
+        self.comboBox.setItemText(5, QCoreApplication.translate("MainWindow", u"SA-04", None))
+        self.comboBox.setItemText(6, QCoreApplication.translate("MainWindow", u"SA-05", None))
+        self.comboBox.setItemText(7, QCoreApplication.translate("MainWindow", u"SA-06", None))
+        self.comboBox.setItemText(8, QCoreApplication.translate("MainWindow", u"SA-07", None))
+        self.comboBox.setItemText(9, QCoreApplication.translate("MainWindow", u"SA-08", None))
+        self.comboBox.setItemText(10, QCoreApplication.translate("MainWindow", u"SA-09", None))
+        self.comboBox.setItemText(11, QCoreApplication.translate("MainWindow", u"SA-10", None))
+        self.comboBox.setItemText(12, QCoreApplication.translate("MainWindow", u"SA-11", None))
+
+        self.date_choose.setText("")
+        self.slot_choose.setText("")
         self.btn_export.setText(QCoreApplication.translate("MainWindow", u"Export", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u" Database View", None))
         self.slot_0.setText(QCoreApplication.translate("MainWindow", u"SA-00", None))
@@ -720,5 +778,8 @@ class Ui_MainWindow(object):
         self.btn_login.setText(QCoreApplication.translate("MainWindow", u"Logout", None))
         self.groupBox_13.setTitle(QCoreApplication.translate("MainWindow", u"Theme Style:", None))
         self.groupBox_14.setTitle(QCoreApplication.translate("MainWindow", u"Comands:", None))
+        self.comand_edit.setText("")
+        self.command_write.setText("")
+        self.btn_test.setText(QCoreApplication.translate("MainWindow", u"Test", None))
     # retranslateUi
 
