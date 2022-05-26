@@ -140,7 +140,7 @@ class MainFunctions(MainWindow):
                 (bottomx, bottomy) = (np.max(x), np.max(y))
                 cropped = gray[topx:bottomx + 1, topy:bottomy + 1]
                 # configuration for tesseract
-                config = '--psm 13 --oem 1 -c tessedit_char_whitelist=ABCDEFG0123456789-'
+                config = '--psm 13 --oem 1 -c tessedit_char_whitelist=ABCDEFGHIKLMNOP0123456789-'
                 text = pytesseract.image_to_string(cropped, lang='eng', config=config)
                 self.entrance_result.setText(text)
                 img = cv2.resize(img, (320, 150))
@@ -204,7 +204,7 @@ class MainFunctions(MainWindow):
                 (bottomx, bottomy) = (np.max(x), np.max(y))
                 cropped = gray[topx:bottomx + 1, topy:bottomy + 1]
                 # configuration for tesseract
-                config = '--psm 13 --oem 1 -c tessedit_char_whitelist=ABCDEFG0123456789-'
+                config = '--psm 13 --oem 1 -c tessedit_char_whitelist=ABCDEFGHIKLMNOP0123456789-'
                 text = pytesseract.image_to_string(cropped, lang='eng', config=config)
                 self.exit_result.setText(text)
                 img = cv2.resize(img, (320, 150))

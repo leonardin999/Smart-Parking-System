@@ -4,6 +4,7 @@ from modules import *
 import serial.tools.list_ports
 from Dialog import CustomSystemConnectionDialog, CustomMessageInformation
 
+
 class SystemFunctions(MainWindow):
 
     def generated_port(self):
@@ -79,9 +80,9 @@ class SystemFunctions(MainWindow):
                 self.ser.write(chr(int(messages)).encode())
                 self.ser.flushInput()
                 time.sleep(0.3)
-            else:
-                error_message = f'Invalid Command.\n' \
-                                f'Please try again.'
-                dialog = CustomMessageInformation(error_message)
-                if dialog.exec_():
-                    return
+        else:
+            error_message = f'Invalid Command.\n' \
+                            f'Please try again.'
+            dialog = CustomMessageInformation(error_message)
+            if dialog.exec_():
+                return
