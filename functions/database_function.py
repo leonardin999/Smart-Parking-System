@@ -268,12 +268,16 @@ class DatabaseFunctions(MainWindow):
         if self.db_connection:
             if plate:
                 DatabaseFunctions.change_exit_status(self, plate)
-                SystemFunctions.send_information(str('15'))
+                SystemFunctions.send_information(str('20'))
+                time.sleep(3)
+                SystemFunctions.send_information(str('22'))
 
     def Ask_for_permission_get_in(self, plate):
         dialog = CustomAcceptedInformation(plate)
         if dialog.exec_():
             DatabaseFunctions.update_entry_information(self, plate)
+            time.sleep(3)
+            SystemFunctions.send_information(str('21'))
         else:
             pass
 
