@@ -220,16 +220,16 @@ class DatabaseFunctions(MainWindow):
             self.cursor.close()
             slot_id = data['slot']
             slot_name = DatabaseFunctions.get_slot_name(slot_id)
-        return slot_name
+        return slot_name, slot_id
 
     def update_entry_information(self, plate=None):
         available_slot = []
         if self.db_connection:
             if DatabaseFunctions.check_reserved(self, plate):
                 DatabaseFunctions.change_entry_status(self, plate)
-                name = DatabaseFunctions.get_slot_name_reserved(self, plate)
-                if name:
-                    SystemFunctions.send_information(self, name)
+                name, slot_id = DatabaseFunctions.get_slot_name_reserved(self, plate)
+                SystemFunctions.send_information(self, slot_id)
+                time.sleep(3)
                 DatabaseFunctions.update_parking_page(self)
             else:
                 self.cursor = self.db.cursor(pymysql.cursors.DictCursor)
@@ -259,7 +259,8 @@ class DatabaseFunctions(MainWindow):
                     DatabaseFunctions.update_table(self, plate, slot_id)
                     name = DatabaseFunctions.get_slot_name(self, slot_id)
                     if name:
-                        SystemFunctions.send_information(self, name)
+                        SystemFunctions.send_information(self, str(slot_id))
+                        time.sleep(3)
 
             DatabaseFunctions.show_table_data(self)
             DatabaseFunctions.counted_function(self)
@@ -268,16 +269,16 @@ class DatabaseFunctions(MainWindow):
         if self.db_connection:
             if plate:
                 DatabaseFunctions.change_exit_status(self, plate)
-                SystemFunctions.send_information(str('20'))
+                SystemFunctions.send_information(self, str('20'))
                 time.sleep(3)
-                SystemFunctions.send_information(str('22'))
+                SystemFunctions.send_information(self, str('22'))
 
     def Ask_for_permission_get_in(self, plate):
         dialog = CustomAcceptedInformation(plate)
         if dialog.exec_():
             DatabaseFunctions.update_entry_information(self, plate)
             time.sleep(3)
-            SystemFunctions.send_information(str('21'))
+            SystemFunctions.send_information(self, str('21'))
         else:
             pass
 

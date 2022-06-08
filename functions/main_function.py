@@ -101,6 +101,7 @@ class MainFunctions(MainWindow):
             img = cv2.resize(img, (320, 150))
 
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 2)
             gray = cv2.bilateralFilter(gray, 13, 15, 15)
 
             edged = cv2.Canny(gray, 30, 200)
@@ -140,7 +141,7 @@ class MainFunctions(MainWindow):
                 (bottomx, bottomy) = (np.max(x), np.max(y))
                 cropped = gray[topx:bottomx + 1, topy:bottomy + 1]
                 # configuration for tesseract
-                config = '--psm 13 --oem 1 -c tessedit_char_whitelist=ABCDEFGHIKLMNOP0123456789-'
+                config = '--oem 3 --psm 10 -c tessedit_char_whitelist=ABCDEFGHIKLMNOP0123456789-'
                 text = pytesseract.image_to_string(cropped, lang='eng', config=config)
                 self.entrance_result.setText(text)
                 img = cv2.resize(img, (320, 150))
@@ -204,7 +205,7 @@ class MainFunctions(MainWindow):
                 (bottomx, bottomy) = (np.max(x), np.max(y))
                 cropped = gray[topx:bottomx + 1, topy:bottomy + 1]
                 # configuration for tesseract
-                config = '--psm 13 --oem 1 -c tessedit_char_whitelist=ABCDEFGHIKLMNOP0123456789-'
+                config = '--oem 3 --psm 10 -c tessedit_char_whitelist=ABCDEFGHIKLMNOP0123456789-'
                 text = pytesseract.image_to_string(cropped, lang='eng', config=config)
                 self.exit_result.setText(text)
                 img = cv2.resize(img, (320, 150))
